@@ -1,3 +1,4 @@
+import com.mipt.nikitadavydov.hw11.LoggingDecorator;
 import org.junit.jupiter.api.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
