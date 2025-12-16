@@ -1,0 +1,37 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+public class CachingDecorator implements DataService {
+    private final DataService delegate;
+    private final Map<String, String> cache = new HashMap<>();
+
+    public CachingDecorator(DataService delegate) {
+        this.delegate = delegate;
+    }
+
+    @Override
+    public Optional<String> findDataByKey(String key) {
+        if (cache.containsKey(key)) {
+            return Optional.of(cache.get(key));
+        }
+        Optional<String> result = delegate.findDataByKey(key);
+        result.ifPresent(data -> cache.put(key, data));
+        return result;
+    }
+
+    @Override
+    public void saveData(String key, String data) {
+        delegate.saveData(key, data);
+        cache.put(key, data);
+    }
+
+    @Override
+    public boolean deleteData(String key) {
+        boolean result = delegate.deleteData(key);
+        if (result) {
+            cache.remove(key);
+        }
+        return result;
+    }
+}
